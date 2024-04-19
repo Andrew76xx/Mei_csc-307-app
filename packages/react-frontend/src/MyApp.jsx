@@ -15,14 +15,6 @@ function MyApp() {
       .catch((error) => { console.log(error); });
   }, [] );
 
-  // filter function -- makes a new array where it does not have the one you wanted to remove
-  function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
-  }
-
   return (
     <div className="container">
       <Table 
@@ -33,12 +25,22 @@ function MyApp() {
     </div>
   );
 
-  function updateList(person) {
+  function updateList(person){ 
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((res) => res.status == 201 ? res.json() : undefined)
+      .then((new_character) => setCharacters([...characters, new_character]))
       .catch((error) => {
         console.log(error);
       })
+  }
+
+  function removeOneCharacter(index){
+    const character_id = characters[index].id;
+    deleteUser(character_id);
+    const updated_list = characters.filter((characters, i) => {
+      return i !== index;
+    });
+    setCharacters(updated_list);
   }
 
   function fetchUsers() {
@@ -47,7 +49,7 @@ function MyApp() {
   } 
 
   function postUser(person) {
-    const promise = fetch("Http://localhost:8000/users", {
+    const promise = fetch("http://localhost:8000/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,6 +58,11 @@ function MyApp() {
     });
 
     return promise;
+  }
+  function deleteUser(id){
+    fetch(`http://localhost:8000/users/${id}`, {
+      method: "DELETE",
+    })
   }
   
 }
