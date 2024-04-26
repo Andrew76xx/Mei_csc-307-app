@@ -8,6 +8,7 @@ function MyApp() {
   // state is like a shopping cart. You can add or remove items from it
   const [characters, setCharacters] = useState([]);
 
+  
   useEffect(() => {
     fetchUsers()
       .then((res) => res.json())
@@ -35,7 +36,7 @@ function MyApp() {
   }
 
   function removeOneCharacter(index){
-    const character_id = characters[index].id;
+    const character_id = characters[index]._id;
     deleteUser(character_id);
     const updated_list = characters.filter((characters, i) => {
       return i !== index;
@@ -66,6 +67,5 @@ function MyApp() {
   }
   
 }
-
 
 export default MyApp;
